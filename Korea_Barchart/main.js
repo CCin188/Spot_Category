@@ -5,11 +5,11 @@ d3.csv(
 });
 
 function drawBarchart(res) {
-  const japanData = res.filter((d) => d.Country === "South Korea");
+  const koreaData = res.filter((d) => d.Country === "South Korea");
 
   let allCategories = [];
 
-  japanData.forEach((d) => {
+  koreaData.forEach((d) => {
     if (d.Category) {
       const cats = d.Category.split(",").map((c) => c.trim().toLowerCase());
       allCategories.push(...cats);
@@ -49,3 +49,4 @@ function drawBarchart(res) {
 
   Plotly.newPlot("myGraph", data, layout);
 }
+
