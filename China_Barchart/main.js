@@ -5,11 +5,11 @@ d3.csv(
 });
 
 function drawBarchart(res) {
-  const japanData = res.filter((d) => d.Country === "China");
+  const chinaData = res.filter((d) => d.Country === "China");
 
   let allCategories = [];
 
-  japanData.forEach((d) => {
+  chinaData.forEach((d) => {
     if (d.Category) {
       const cats = d.Category.split(",").map((c) => c.trim().toLowerCase());
       allCategories.push(...cats);
