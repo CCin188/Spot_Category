@@ -87,8 +87,8 @@ function drawBarchart(res) {
     yaxis: {
       title: "Count",
       tickmode: "array",
-      tickvals: [0, 1, 2, 3, 4, 5],
-      range: [0, 5],
+      tickvals: Array.from({ length: 16 }, (_, i) => i),
+      range: [0, 15],
     },
     margin: { t: 50, b: 150 },
     bargap: 0.1,
