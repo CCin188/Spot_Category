@@ -3,6 +3,32 @@ d3.csv(
 ).then((res) => {
   drawBarchart(res);
 });
+function mapCategory(cat) {
+  cat = cat.toLowerCase();
+  //Culture
+  if (
+    cat.includes("culture") ||
+    cat.includes("history") ||
+    cat.includes("film festival") ||
+    cat.includes("K-pop") ||
+    cat.includes("temples")
+  )
+    return "culture";
+  //Food
+  if (cat.includes("food") || cat.includes("seafood market")) return "food";
+  //Shopping
+  if (cat.includes("shopping")) return "shopping";
+  //Nightlife
+  if (cat.includes("nightlife")) return "nightlife";
+  //Nature
+  if (
+    cat.includes("nature") ||
+    cat.includes("port city") ||
+    cat.includes("palaces")
+  )
+    return "nature";
+  return "other";
+}
 
 function drawBarchart(res) {
   const koreaData = res.filter((d) => d.Country === "South Korea");
@@ -11,8 +37,10 @@ function drawBarchart(res) {
 
   koreaData.forEach((d) => {
     if (d.Category) {
-      const cats = d.Category.split(",").map((c) => c.trim().toLowerCase());
-      allCategories.push(...cats);
+      const cats = d.Category.split(",").map((c) => c.trim());
+      cats.forEach((c) => {
+        allCategories.push(mapCategory(c));
+      });
     }
   });
 
@@ -22,8 +50,27 @@ function drawBarchart(res) {
     (c) => c
   );
 
-  const categories = Array.from(categoryCountMap.keys());
-  const counts = Array.from(categoryCountMap.values());
+  let categories = Array.from(categoryCountMap.keys());
+  let counts = Array.from(categoryCountMap.values());
+
+  const customOrder = [
+    "food",
+    "culture",
+    "shopping",
+    "nightlife",
+    "nature",
+    "other",
+  ];
+
+  const sorted = customOrder
+    .filter((cat) => categories.includes(cat))
+    .map((cat) => ({
+      category: cat,
+      count: categoryCountMap.get(cat) ?? 0,
+    }));
+
+  categories = sorted.map((d) => d.category);
+  counts = sorted.map((d) => d.count);
 
   const trace1 = {
     x: categories,
@@ -36,7 +83,7 @@ function drawBarchart(res) {
 
   const layout = {
     title: { text: "韓國旅遊景點分類" },
-    xaxis: { tickangle: -35 },
+    xaxis: { tickangle: 0 },
     yaxis: {
       title: "Count",
       tickmode: "array",
@@ -44,9 +91,8 @@ function drawBarchart(res) {
       range: [0, 5],
     },
     margin: { t: 50, b: 150 },
-    bargap: 0.08,
+    bargap: 0.1,
   };
 
   Plotly.newPlot("myGraph", data, layout);
 }
-
